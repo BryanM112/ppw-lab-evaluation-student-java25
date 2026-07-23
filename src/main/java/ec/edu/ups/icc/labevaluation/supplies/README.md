@@ -16,3 +16,6 @@ supplies/
 ├── repositories
 └── services
 ```
+
+  error:
+    include-stacktrace: never
