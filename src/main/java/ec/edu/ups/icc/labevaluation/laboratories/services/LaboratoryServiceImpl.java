@@ -9,9 +9,10 @@ import ec.edu.ups.icc.labevaluation.laboratories.repositories.LaboratoryReposito
 public class LaboratoryServiceImpl implements LaboratoryService {
     private final LaboratoryRepository repository;
     public LaboratoryServiceImpl(LaboratoryRepository repository){this.repository=repository;}
+    //simplemente se cambio el metodo en return repository. por el nuevo
     @Override @Transactional(readOnly=true)
     public List<LaboratoryResponseDto> findAvailable(Long campusId, Integer minCapacity){
-        return repository.findByActiveTrueAndDeletedFalseOrderByIdAsc().stream().map(LaboratoryMapper::toResponse).toList();
+        return repository.findByCampus_IdAndCapacityGreaterThanEqualAndActiveTrueAndDeletedFalseAndCampus_ActiveTrueAndCampus_DeletedFalseOrderByCapacityDesc(campusId, minCapacity).stream().map(LaboratoryMapper::toResponse).toList();
     }
     @Override @Transactional(readOnly=true)
     public LaboratoryResponseDto findOne(Long id){
