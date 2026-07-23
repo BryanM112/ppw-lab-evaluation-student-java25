@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,22 +33,26 @@ public class SupplyController {
     }
 
     @PostMapping
+    @PreAuthorize("hasAnyRole('ADMIN', 'COORDINATOR')")
     public ResponseEntity<SupplyResponseDto> create(@Valid @RequestBody CreateSupplyDto dto) {
         SupplyResponseDto response = supplyService.create(dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @GetMapping("/low-stock")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<List<SupplyResponseDto>> findLowStock(@RequestParam Integer maxQuantity) {
         return ResponseEntity.ok(supplyService.findLowStock(maxQuantity));
     }
 
     @PatchMapping("/{id}/quantity")
+    @PreAuthorize("hasAnyRole('ADMIN', 'COORDINATOR')")
     public ResponseEntity<SupplyResponseDto> updateQuantity(@PathVariable Long id, @Valid @RequestBody UpdateSupplyQuantityDto dto) {
         return ResponseEntity.ok(supplyService.updateQuantity(id, dto));
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'COORDINATOR')")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         supplyService.delete(id);
         return ResponseEntity.noContent().build();
