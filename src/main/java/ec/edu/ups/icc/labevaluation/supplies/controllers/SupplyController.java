@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,7 +22,7 @@ import ec.edu.ups.icc.labevaluation.supplies.services.SupplyService;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/suplies")
+@RequestMapping("/supplies")
 @Validated
 public class SupplyController {
     private final SupplyService supplyService;
@@ -44,5 +45,11 @@ public class SupplyController {
     @PatchMapping("/{id}/quantity")
     public ResponseEntity<SupplyResponseDto> updateQuantity(@PathVariable Long id, @Valid @RequestBody UpdateSupplyQuantityDto dto) {
         return ResponseEntity.ok(supplyService.updateQuantity(id, dto));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        supplyService.delete(id);
+        return ResponseEntity.noContent().build();
     }
 }
