@@ -8,7 +8,9 @@ import ec.edu.ups.icc.labevaluation.users.repositories.UserRepository;
 public class UserServiceImpl implements UserService {
     private final UserRepository repository;
     public UserServiceImpl(UserRepository repository){this.repository=repository;}
+    //Ya no usamos findAll() sino el método creado por mí
     @Override public List<UserResponseDto> findEligible(){
-        return repository.findAll().stream().filter(user -> !user.isDeleted()).map(UserMapper::toResponse).toList();
+        return repository.findByAgeGreaterThanEqualAndActiveTrueAndDeletedFalseOrderByFullNameAsc(18)
+        .stream().map(UserMapper::toResponse).toList();
     }
 }
