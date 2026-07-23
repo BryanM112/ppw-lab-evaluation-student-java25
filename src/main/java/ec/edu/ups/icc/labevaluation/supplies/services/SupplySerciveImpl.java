@@ -7,8 +7,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import ec.edu.ups.icc.labevaluation.supplies.dtos.CreateSupplyDto;
 import ec.edu.ups.icc.labevaluation.supplies.dtos.SupplyResponseDto;
+import ec.edu.ups.icc.labevaluation.supplies.dtos.UpdateSupplyQuantityDto;
 import ec.edu.ups.icc.labevaluation.supplies.entities.SupplyEntity;
 import ec.edu.ups.icc.labevaluation.supplies.exceptions.SuppleConflictException;
+import ec.edu.ups.icc.labevaluation.supplies.exceptions.SupplyNotFoundException;
 import ec.edu.ups.icc.labevaluation.supplies.mappers.SupplyMapper;
 import ec.edu.ups.icc.labevaluation.supplies.repositories.SupplyRepository;
 
@@ -45,5 +47,22 @@ public class SupplySerciveImpl implements SupplyService{
             return supplyRepository.findByActiveTrueAndDeletedFalseAndQuantityLessThanOrderByQuantityAsc(maxQuantity)
             .stream().map(SupplyMapper::toResponse).toList();
     }
+
+    @Override
+    public SupplyResponseDto updateQuantity(Long id, UpdateSupplyQuantityDto dto) {
+        SupplyEntity entity = supplyRepository.findByIdAndDeletedFalse(id)
+        .orElseThrow(() -> new SupplyNotFoundException(
+            "No se encontró el insumo con id: " + id
+        ));
+
+        entity.setQuantity(dto.quantity());
+
+        SupplyEntity updatedEntity = supplyRepository.save(entity);
+
+        return SupplyMapper.toResponse(updatedEntity);
+       
+    }
+
+    
     
 }
