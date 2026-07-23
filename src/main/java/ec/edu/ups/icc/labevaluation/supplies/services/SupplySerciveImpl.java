@@ -64,9 +64,9 @@ public class SupplySerciveImpl implements SupplyService{
     }
 
     @Override
-public void delete(Long id) {
-    SupplyEntity entity = supplyRepository.findByIdAndDeletedFalse(id).orElseThrow(() -> new SupplyNotFoundException(
-        "Supply not found with id: " + id));
+    public void delete(Long id) {
+        SupplyEntity entity = supplyRepository.findByIdAndDeletedFalse(id).orElseThrow(() -> new SupplyNotFoundException(
+        "Supply no puede ser encontrado con id: " + id));
         if (entity.getQuantity() > 0) {
             throw new SuppleConflictException("Supply no peude ser eliminado mientras que cantidad sea mayor que 0");
         }
